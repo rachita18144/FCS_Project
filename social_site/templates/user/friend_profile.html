@@ -1,0 +1,112 @@
+{% extends "../registration/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-8" style="padding:1em">
+        <div class="card">
+            <div class="card-body">
+                {% if isFriend == True %}
+                <h3>{{username}} is your friend</h3>
+                {% else %}
+                <h3>Add {{username}} as your friend</h3>
+                {% endif %}
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                        {% if isFriend == True %}
+                        <a id="unfriend" class="btn btn-outline-success" type="submit">Unfriend</a>
+                        {% else %}
+                        <a id="add_friend" class="btn btn-outline-success" type="submit">Add Friend</a>
+                        {% endif %}
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-info" type="submit">Send Message</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+
+        <div class="card">
+            <div class="card-body">
+                <h3>Post on {{username}} timeline</h3>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="col-7">
+                            <input type="text" name="post_text" id="post_text" class="form-control" placeholder="Post">
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-info" type="submit" id="post">Post</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+
+$(document).ready(function () {
+    $("#add_friend").click(function (event) {
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:8000/profile/friends/add_friend",
+            dataType: 'json',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'friend_user_name': "{{ username }}"
+            },
+            success: function (response) {
+                console.log('here');
+                alert("Congratulations! You have added a new friend.");
+                console.log(response);
+            }
+        });
+        return false;
+    });
+
+     $("#unfriend").click(function (event) {
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:8000/profile/friends/delete_friend",
+            dataType: 'json',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'friend_user_name': "{{ username }}"
+            },
+            success: function (response) {
+                console.log('here');
+                alert("Unfriend Success");
+                console.log(response);
+            }
+        });
+        return false;
+    });
+    $("#post").click(function (event) {
+        post_content = $('#post_text').val();
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:8000/profile/friends/post",
+            dataType: 'json',
+            data: {
+                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                'friend_user_name': "{{ username }}",
+                'post_content': post_content 
+            },
+            success: function (response) {
+                console.log('here');
+                alert("Posted on timeline");
+                console.log(response);
+            }
+        });
+        return false;
+    });
+});
+
+</script>
+{% endblock %}

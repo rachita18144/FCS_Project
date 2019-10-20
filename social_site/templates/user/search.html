@@ -1,0 +1,94 @@
+{% extends "../registration/base.html" %}
+
+{% block content %}
+<h2>Hi {{ user.username }}</h2>
+
+<div class="row justify-content-center">
+  <div class="col-8" style="padding:1em">
+    <div class="card">
+      <div class="card-body">
+
+        <h3>Search users by username</h3>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="col-7">
+              <input type="text" name="srch" class="form-control" placeholder="Search">
+            </div>
+            <div class="col">
+              <button class="btn btn-info" type="submit">Search</button>
+            </div>
+          </div>
+        </form>
+
+        <br><br>
+        <div>
+          {% if sr %}
+          <div class="row">
+            <div class="col-7">
+              <h4>{{ sr.username }}</h4>
+            </div>
+            <div class="col">
+              <a href = "{% url 'personProfilePage' username=sr.username %}">Add Friend</a>
+            </div>
+          </div>
+
+          {% endif %}
+        </div>
+        <div>
+          {% if messages %}
+          <h4>{{ messages }}</h4>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-8" style="padding:1em">
+    <div class="card">
+      <div class="card-body">
+
+        <h3>Search groups by group name</h3>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="col-7">
+              <input type="text" name="grp_search" class="form-control" placeholder="Search">
+            </div>
+            <div class="col">
+              <button class="btn btn-info" type="submit">Search</button>
+            </div>
+          </div>
+        </form>
+
+        <br><br>
+        <div>
+          {% if gr %}
+          <div class="row">
+            <div class="col-7">
+              <h4>{{ gr.group_name }}</h4>
+            </div>
+            <div class="col">
+              <a href = "{% url 'personProfilePage' gr.group_name %}">Join Group</a>
+            </div>
+          </div>
+
+          {% endif %}
+        </div>
+
+        <div>
+          {% if messages %}
+          <h4>{{ messages }}</h4>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "../registration/base.html" %}
+
+{% block content %}
+    <h2>All Groups</h2>
+    <hr>
+    <div class="container-fluid">
+            {% for group in allgroups %}
+                <div class="row">
+                    <div class="col-sm">
+                        {{group.group_name}}
+                    </div>
+                    <div class="col-sm">
+                        <input type="button" class="btn btn-outline-primary btn-block" onclick="window.location.href='/groups'" value='View Group'></button>
+                     </div>
+                </div>
+                 <hr>
+            {% endfor %}
+        </div>
+{% endblock %}

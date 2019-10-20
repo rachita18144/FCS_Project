@@ -1,0 +1,28 @@
+{% extends "../registration/base.html" %}
+
+{% block content %}
+    <h2>Messages</h2>
+    <hr>
+   <div class="container" style="border:3px solid lightsteelblue; overflow-y:auto; height:450px;">
+        {% for msg in allmsgs %}
+        <div class="row">
+                <div class="col-2" style="background-color: lightsteelblue">
+                <p>{{msg.sender}} :</p>
+                </div>
+                <div class="col-sm">
+                 <p>{{msg.msg_content}}</p>   
+                 </div>
+        </div>
+        {% endfor %}
+    </div>
+    <br>
+    <div class="form-group">
+            <form action="{% url 'dm' friendname %}" method="POST">
+              {% csrf_token %} 
+            <input type="text" class="form-control" placeholder="Enter your message" name="msgcontent">
+            <br>
+            <input type="submit" class="btn btn-outline-primary btn-block" value="Send Message">
+            </form>
+    </div>
+
+{% endblock %}

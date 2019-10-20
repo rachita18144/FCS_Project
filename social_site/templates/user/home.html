@@ -2,4 +2,52 @@
 
 {% block content %}
     <h2>Hi {{ user.username }}</h2>
+<hr>
+<div class=".container-fluid">
+        <div style="clear: both">
+                <h3 style="float: left">Friends</h2>
+                <h4 style="float: right"><a href="/profile/friends">View All</a></h3>
+        </div>
+        <br><br>
+        <div>
+                <h4 style="color:gray">{{friend_count}} Friends</h4>
+        </div>
+        <hr>
+        <div style="clear: both">
+                <h3 style="float: left">Groups</h2>
+                <h4 style="float: right"><a href="/profile/groups">View All</a></h3>
+        </div>
+        <br><br>
+        <div>
+                <h4 style="color:gray">{{group_count}} groups</h4>
+        </div>
+        <hr class="wide">
+        <h3><b>Timeline</b></h3>
+        <div class="form-group">
+            <form action="/profile/home" method="POST">
+              {% csrf_token %} 
+            <input type="text" class="form-control" placeholder=" What's on your mind?" name="postcontent">
+            <br>
+            <input type="submit" class="btn btn-outline-primary btn-block" value="POST">
+            </form>
+        </div>
+        <hr class="wide">
+        <div class="container-fluid">
+          {%for user_post in allposts %}
+            <div class="card">
+                <div class="card-header">
+                 {{user_post.postTime}}
+                </div>
+                <div class="card-body">
+                  <blockquote class="blockquote mb-0">
+                    <p>{{user_post.postContent}}
+                  </blockquote>
+                </div>
+             </div>
+             <br>
+             {% endfor %}
+               
+                </div> 
+        </div>
+</div>
 {% endblock %}

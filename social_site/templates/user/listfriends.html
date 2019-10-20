@@ -1,0 +1,22 @@
+{% extends "../registration/base.html" %}
+
+{% block content %}
+    <h2>All Friends</h2>
+    <hr>
+    <div class="container-fluid">
+        {% for friend in allfriends %}
+            <div class="row">
+                <div class="col-sm">
+                    {{friend.friend_user_name}}
+                </div>
+                <div class="col-sm">
+                    <a href = "{% url 'profilepage' friend.friend_user_name %}" class="btn btn-outline-primary my-2 my-sm-0">View Profile</a>
+                </div>
+                <div class="col-sm">
+                    <a href = "{% url 'dm' friend.friend_user_name %}" class="btn btn-outline-primary my-2 my-sm-0">Direct Message</a>
+                 </div>
+            </div>
+             <hr>
+        {% endfor %}
+    </div>
+{% endblock %}
