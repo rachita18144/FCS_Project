@@ -50,4 +50,17 @@
                 </div> 
         </div>
 </div>
+
+{% if alert_flag %}
+                        <script type="text/javascript">
+                                document.getElementById("navbarDropdown1").style.display = "none";
+                         </script>
+    {% endif %}
+    {% if alert_flag1 %}
+        <script> alert("Request Sent") </script>
+    {% endif %}
+    {% if join %}
+        <script> alert("Group Joined") </script>
+{% endif %}
+
 {% endblock %}

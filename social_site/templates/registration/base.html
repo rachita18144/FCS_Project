@@ -38,13 +38,25 @@
       </li>
     </ul>
     {% if user.is_authenticated %}
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Group
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'createg' %}">Create Group</a>
+          <a class="dropdown-item" href="{% url 'viewrequest' %}">View Pending Request</a>
+        </div>
+      </li>
+    </ul>
+
        <ul class="navbar-nav">
         <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {{ user.username }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">View all users</a>
+          <a class="dropdown-item" href="{% url 'allusers' %}">View all users</a>
           <a class="dropdown-item" href="{% url 'home' %}">Profile</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>

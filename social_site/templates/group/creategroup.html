@@ -1,0 +1,67 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{%static 'update1.css' %}">
+<div class="h1">
+<h1 style="color:grey;"> Create Group </h1>
+</div>
+<div class="b">
+<form action="create" method="post">
+    {% csrf_token %}
+    {{form}}
+    {% if alert_flag %}
+    <script>alert("Please choose different group name. Group already exist")</script>
+    {% endif %}
+    {% if alert_flag1 %}
+    <script>alert("Group created")</script>
+    {% endif %}
+     {% if alert_flag2 %}
+    <script>alert("Please fill all the fields")</script>
+    {% endif %}
+    <div>
+        <label for="group_name"><b>Group Name</b></label>
+    <input type="text" class="form-control" id="group_name" name="groupname">
+    </div>
+    <div class="a">
+    <label><b>Privacy</b></label>
+        <div class="styled-select slate">
+
+             <select id="privacy" name="privacy">
+                 <option value = "open">Open</option>
+               <option value = "close">Close</option>
+             </select>
+        </div>
+          </div>
+        <div class="a">
+    <label><b>Group Type</b></label>
+        <div class="styled-select slate">
+
+             <select id="group_type" name="grouptype" onchange="yesnoCheck()">
+                 <option value = "premium"id="premium">Premium</option>
+               <option value = "free" id="free">Free</option>
+             </select>
+        </div>
+          </div>
+
+        <div id="check">
+        <label for="amount"><b>Amount</b></label>
+    <input type="number" class="form-control" id="amount" name="amount" value="0">
+        </div>
+
+    <div>
+    <button type="submit" class="button">Create</button>
+    </div>
+     <script type="text/javascript">
+    function yesnoCheck() {
+        if (document.getElementById("free").selected) {
+            document.getElementById("check").style.display = "none";
+        } else {
+            document.getElementById("check").style.display = "block";
+        }
+    }
+</script>
+</form>
+</div>
+{% endblock %}

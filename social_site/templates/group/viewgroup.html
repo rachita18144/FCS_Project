@@ -1,0 +1,74 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+<link rel="stylesheet" href="{%static 'update1.css' %}">
+<div>
+<div class="h1">
+
+<h1> <b>{{l.0}} </b></h1>
+
+</div>
+
+
+
+
+{% if l.4 %}
+
+    <div class="d">
+    <label id="joined"> ✔ </label>
+    </div>
+    <div >
+        <form>
+            {% csrf_token %}
+        <button type="submit" class="button" id="join2" name="gname" value="{{l}}" formaction="post" formmethod="post">Post
+        </button>
+        </form>
+    </div>
+{% elif l.2 %}
+<div class="c">
+    <label>Pending</label>
+</div>
+{% else %}
+    {% if l.5 %}
+        <div>
+            <form>
+                {% csrf_token %}
+            <button type="submit" class="button" id="join" name="gname" value="{{l.0}}" formaction="payment" formmethod="post" onclick="yesnoCheck()">Join</button>
+            </form>
+        </div>
+        <script type="text/javascript">
+            function yesnoCheck() {
+                    document.getElementById("join").style.display = "none";
+                    }
+                  </script>
+
+    {% elif l.3 %}
+        <div>
+            <form>
+                {% csrf_token %}
+            <button type="submit" class="button" id="join1" name="gname" value="{{l.0}}" formaction="join1" formmethod="post" onclick="yesnoCheck()">Join</button>
+            </form>
+        </div>
+        <script type="text/javascript">
+            function yesnoCheck() {
+                    document.getElementById("join1").style.display = "none";
+                    }
+                  </script>
+    {% else %}
+        <div>
+            <form>
+                {% csrf_token %}
+            <button type="submit" class="button" id="join4" name="gname" value="{{l.0}}" formaction="join" formmethod="post" onclick="yesnoCheck()">Join</button>
+            </form>
+        </div>
+        <script type="text/javascript">
+            function yesnoCheck() {
+                    document.getElementById("join4").style.display = "none";
+                    }
+                  </script>
+    {% endif %}
+{% endif %}
+</div>
+
+{% endblock %}

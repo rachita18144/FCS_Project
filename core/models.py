@@ -7,10 +7,6 @@ class Friends(models.Model):
     class Meta:
         unique_together = (("person_user_name", "friend_user_name"),)
 
-#class Groups(models.Model):
-#    created_by = models.CharField(max_length=30)
-#    group_name = models.CharField(max_length=30)
-
 class Groups(models.Model):
     person_user_name = models.CharField(max_length=30)
     group_name = models.CharField(max_length=60)
@@ -46,3 +42,40 @@ class DirectMessages(models.Model):
 
     def __str__(self):
         return self.msg_content
+
+class UpdateProfile(models.Model):
+    user_id = models.CharField(max_length=250, default=" default ")
+    First_name = models.CharField(max_length=250, default=" ")
+    Last_name = models.CharField(max_length=250, default=" ")
+    Bio = models.CharField(max_length=850, default=" ")
+    Privacy_setting = models.CharField(max_length=250, default="public")
+    Phone_number = models.IntegerField(default=0000000000)
+    user_type = models.CharField(max_length=250, default="Casual")
+
+    def __str__(self):
+        return "%s %s %s %s" % (self.First_name, self.Last_name, self.Bio, self.Privacy_setting)
+
+
+class GroupNew(models.Model):
+    group_id = models.IntegerField(default=0)
+    group_name = models.CharField(max_length=250)
+    admin_id = models.CharField(max_length=250)
+    privacy = models.CharField(max_length=250)
+    group_type = models.CharField(max_length=250)
+    amount = models.IntegerField(default=0)
+
+    def __str__(self):
+        return " %s %s %s " % (self.group_name, self.admin_id, self.privacy)
+
+
+class GroupRequest(models.Model):
+    group_id = models.IntegerField(default=0)
+    request = models.IntegerField(default=0)
+    user_id = models.CharField(max_length=250)
+    admin_id = models.CharField(max_length=250, default=0)
+
+
+class UserGroup(models.Model):
+    user_id = models.CharField(max_length=250)
+    group_id = models.IntegerField(default=0)
+

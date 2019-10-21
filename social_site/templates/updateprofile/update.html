@@ -1,0 +1,49 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{%static 'update1.css' %}">
+<div class="h1">
+<h1 style="color:green;"> Update Profile </h1>
+</div>
+<div class="b">
+<form action="update" method="post">
+    {% csrf_token %}
+    {{form}}
+    {% if alert_flag %}
+    <script>alert("Please fill all the fields")</script>
+    {% endif %}
+    <div class="form-group">
+        <label for="first_name"><b>First Name</b></label>
+    <input type="text" class="form-control" id="first_name" name="fname">
+  </div>
+    <div>
+        <label for="last_name"><b>Last Name: </b></label>
+    <input type="text" id="last_name" name="lname">
+  </div>
+    <div>
+        <label for="bio"><b>Bio:</b></label>
+        <textarea id="bio" name="bio1"></textarea>
+    </div>
+     <div>
+        <label for="Phonenumber"><b>Phone number: </b></label>
+    <input type="number" id="Phonenumber" name="phno">
+    </div>
+    <div class="a">
+    <label><b>Privacy Setting</b></label>
+        <div class="styled-select slate">
+
+             <select id="op" name="op1">
+                 <option value = "public">Public</option>
+               <option value = "private">Private</option>
+             </select>
+        </div>
+          </div>
+    <div >
+    <button type="submit" class="button">Submit</button>
+        </div>
+
+</form>
+</div>
+{% endblock %}

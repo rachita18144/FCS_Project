@@ -1,0 +1,22 @@
+{% extends "../registration/base.html" %}
+
+{% block content %}
+    <h2>All Users</h2>
+    <hr>
+    <div class="container-fluid">
+        {% for user in users %}
+            <div class="row">
+                <div class="col-sm">
+                    {{user.username}}
+                </div>
+                <div class="col-sm">
+                    <a href = "{% url 'profilepage' user.username %}" class="btn btn-outline-primary my-2 my-sm-0">View Profile</a>
+                </div>
+                <div class="col-sm">
+                    <a href = "{% url 'dm' user.username %}" class="btn btn-outline-primary my-2 my-sm-0">Direct Message</a>
+                 </div>
+            </div>
+             <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "registration/base.html" %}
+{% load staticfiles %}
+{% block content %}
+<link rel="stylesheet" href="{%static 'update1.css' %}">
+<form action="viewrequest1" method="post">
+    {% csrf_token %}
+<h1><button type="submit" class="button" >View Request
+        </button> </h1>
+</form>
+<body>
+
+
+<div class="row">
+  <div class="column">
+    {% for i in l %}
+    <div class="division">
+        <div class="div2">
+        {{i}}
+        <form>
+            {% csrf_token %}
+        <button type="submit" class="button" id="join2" name="gname" value={{i}} formaction="viewcontent" formmethod="post">View
+        </button>
+        </form>
+        </div>
+    </div>
+      {% endfor %}
+  </div>
+  <div class="column">
+      {% for t,t1,t3 in k %}
+      <div class="division">
+            <div class="div2">
+                {{t1}}
+                <form>
+                    {% csrf_token %}
+                     <button type="submit" class="button" id="join3" name="gname" value={{t3}}{{t}} formaction="approve" formmethod="post">Approve
+                     </button>
+                </form>
+            </div>
+            </div>
+        {% empty %}
+        <div class="division">
+            <label> No pending request</label>
+        </div>
+      {% endfor %}
+  </div>
+</div>
+</body>
+{% endblock %}
