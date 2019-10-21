@@ -32,5 +32,6 @@ urlpatterns = [
     path('profile/viewrequest1', views.viewrequest1, name="viewrequest1"),
     path('profile/viewcontent', views.viewcontent, name="viewcontent"),
     path('profile/approve', views.approve, name="approve"),
-
+    path('pages/<name>',views.listpages,name='pages'),
+    path('createpage',views.createPage,name='createpage'),
 ]

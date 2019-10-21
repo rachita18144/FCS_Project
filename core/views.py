@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from core.models import Groups, Friends, FriendTimelinePost, UserPosts, DirectMessages, GroupRequest, UserGroup, GroupNew, UpdateProfile
+from core.models import Groups, Friends, FriendTimelinePost, UserPosts, DirectMessages, GroupRequest, UserGroup, GroupNew, UpdateProfile, PagePosts, Pages
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
@@ -408,3 +408,28 @@ def approve(request):
     usergroup.user_id= uid
     usergroup.save()
     return render(request, 'group/viewrequest.html',{'t_flag':True})
+
+def listpages(request,name):
+    if name=="show":
+        allpages=Pages.objects.filter().order_by('page_name')
+        return render(request,'pages/listpages.html',{'allpages':allpages})
+    else:
+        s=request.POST.__contains__('postcontent')
+        print(s)
+        if s:
+            model=PagePosts()
+            now = datetime.now()
+            str=now.strftime("%Y-%m-%d %H:%M:%S")
+            content=request.POST.get('postcontent')
+            print(content)
+            model.post_content=content
+            model.page_name=name
+            model.postTime=str
+            model.save()
+        page=Pages.objects.filter(page_name=name)
+        allposts=PagePosts.objects.filter(page_name=name).order_by('-postTime')
+        print(allposts.count())
+        return render(request,'pages/pagelayout.html',{'page':page,'pagename':name,'allposts':allposts})
+
+def createPage(request):
+    return render(request,'pages/create_page_form.html')

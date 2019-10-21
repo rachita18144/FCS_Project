@@ -79,3 +79,15 @@ class UserGroup(models.Model):
     user_id = models.CharField(max_length=250)
     group_id = models.IntegerField(default=0)
 
+class Pages(models.Model):
+    page_name= models.CharField(max_length=30, unique=True)
+    page_des=models.CharField(max_length=100)
+    page_admin=models.CharField(max_length=30)
+
+class PagePosts(models.Model):
+    page_name=models.CharField(max_length=30)
+    post_content=models.TextField()
+    postTime=models.DateTimeField()
+
+    def __str__(self):
+        return self.post_content
