@@ -2,9 +2,10 @@
 
 {% block content %}
 <h2>Hi {{ user.username }}</h2>
+<hr>
 
 <div class="row justify-content-center">
-  <div class="col-8" style="padding:1em">
+  <div class="col-10" style="padding:1em">
     <div class="card">
       <div class="card-body">
 
@@ -13,7 +14,7 @@
         <form method="post">
           {% csrf_token %}
           <div class="form-row">
-            <div class="col-7">
+            <div class="col-9">
               <input type="text" name="srch" class="form-control" placeholder="Search">
             </div>
             <div class="col">
@@ -26,11 +27,11 @@
         <div>
           {% if sr %}
           <div class="row">
-            <div class="col-7">
+            <div class="col-9">
               <h4>{{ sr.username }}</h4>
             </div>
             <div class="col">
-              <a href = "{% url 'personProfilePage' username=sr.username %}">Add Friend</a>
+              <a href = "{% url 'personProfilePage' username=sr.username %}">Open Profile</a>
             </div>
           </div>
 
@@ -47,7 +48,7 @@
 </div>
 
 <div class="row justify-content-center">
-  <div class="col-8" style="padding:1em">
+  <div class="col-10" style="padding:1em">
     <div class="card">
       <div class="card-body">
 
@@ -56,7 +57,7 @@
         <form method="post">
           {% csrf_token %}
           <div class="form-row">
-            <div class="col-7">
+            <div class="col-9">
               <input type="text" name="grp_search" class="form-control" placeholder="Search">
             </div>
             <div class="col">
@@ -69,11 +70,11 @@
         <div>
           {% if gr %}
           <div class="row">
-            <div class="col-7">
+            <div class="col-9">
               <h4>{{ gr.group_name }}</h4>
             </div>
             <div class="col">
-              <a href = "{% url 'personProfilePage' gr.group_name %}">Join Group</a>
+              <a href = "{% url 'personProfilePage' gr.group_name %}">Open Group Page</a>
             </div>
           </div>
 

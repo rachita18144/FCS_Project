@@ -1,8 +1,11 @@
 {% extends "../registration/base.html" %}
 
 {% block content %}
+<h2>Hi {{ user.username }}</h2>
+<hr>
+
 <div class="row justify-content-center">
-    <div class="col-8" style="padding:1em">
+    <div class="col-10" style="padding:1em">
         <div class="card">
             <div class="card-body">
                 {% if isFriend == True %}
@@ -12,15 +15,15 @@
                 {% endif %}
                 <br>
                 <div class="row">
-                    <div class="col-4">
+                    <div class="col-5">
                         {% if isFriend == True %}
-                        <a id="unfriend" class="btn btn-outline-success" type="submit">Unfriend</a>
+                        <a id="unfriend" class="btn btn-primary" href="#" role="button">Unfriend</a>
                         {% else %}
-                        <a id="add_friend" class="btn btn-outline-success" type="submit">Add Friend</a>
+                        <a id="add_friend" class="btn btn-primary" href="#" role="button">Add Friend</a>
                         {% endif %}
                     </div>
-                    <div class="col-4">
-                        <button class="btn btn-info" type="submit">Send Message</button>
+                    <div class="col-5">
+                        <a class="btn btn-primary" href="#" href="{% url 'dm' username %}" role="button">Direct Message</a>
                     </div>
                 </div>
             </div>
@@ -29,16 +32,16 @@
 
         <div class="card">
             <div class="card-body">
-                <h3>Post on {{username}} timeline</h3>
+                <h3>Post on {{username}}'s timeline</h3>
 
                 <form method="post">
                     {% csrf_token %}
                     <div class="form-row">
-                        <div class="col-7">
+                        <div class="col-10">
                             <input type="text" name="post_text" id="post_text" class="form-control" placeholder="Post">
                         </div>
                         <div class="col">
-                            <a class="btn btn-info" type="submit" id="post">Post</a>
+                            <a class="btn btn-primary" id="post" href="#" role="button">Post</a>
                         </div>
                     </div>
                 </form>

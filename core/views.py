@@ -24,7 +24,7 @@ def loginSignup(request):
         print(form.is_valid())
         if form.is_valid():
             form.save()
-            return redirect('loginSignup')
+            return redirect('login')
     else:
         form = UserCreationForm()
 
@@ -55,7 +55,7 @@ def search(request):
         if grp_search_query:
             user=None
             try:
-                grp_name = Groups.objects.get(group_name=grp_search_query)
+                grp_name = GroupNew.objects.get(group_name=grp_search_query)
             except ObjectDoesNotExist:
                 grp_name = None
             if grp_name:
@@ -106,7 +106,8 @@ def personProfile(request, username):
         isFriend = checkIfAlreadyFriend(username, request.user.username)
         return render(request, 'user/friend_profile.html', {'username':username, 'isFriend':isFriend} )
     if grp_name:
-        return render(request, 'user/group_page.html', {'group_name':username} )
+        return view(request, username)
+        #return render(request, 'user/group_page.html', {'group_name':username} )
 
 @login_required(login_url='/accounts/login/')
 def addFriend(request):
@@ -254,8 +255,8 @@ def create(request):
             return render(request, 'group/creategroup.html', {'alert_flag2': True})
 
 
-def view(request):
-    group_name='FCS'
+def view(request, group):
+    group_name=group
     user = request.user.id
     glist= GroupNew.objects.filter(group_name= group_name)
     gid1 = glist.values("group_id")
@@ -302,7 +303,7 @@ def view(request):
     t = UserGroup.objects.filter(user_id= user, group_id= gid.get(id)).exists()
     l=[group_name,bool, v, p, joined, g_id1]
     return render( request,'group/viewgroup.html', {'l': l})
-# {'alert_flag2':int(bool1)}
+
 def join(request):
     userreq= GroupRequest()
     gname= request.POST.get("gname"," ")

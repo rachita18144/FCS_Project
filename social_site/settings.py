@@ -121,7 +121,7 @@ USE_TZ = True
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-    'FCS_Project/static/'
+    'Social_networking/static/'
 
 ]
 
@@ -130,4 +130,5 @@ STATICFILES_DIRS = [
 
 STATIC_URL = '/static/'
 LOGIN_REDIRECT_URL = '/profile/home'
+LOGOUT_REDIRECT_URL = '/accounts/login'
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
