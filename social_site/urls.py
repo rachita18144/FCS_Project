@@ -18,4 +18,6 @@ urlpatterns = [
     path('profilepage/<name>',views.viewprofile,name='profilepage'),
     path('profile/friends',views.friends),
     path('profile/groups',views.groups),
+    path('pages/<name>',views.listpages,name='pages'),
+    path('createpage',views.createPage,name='createpage')
 ]

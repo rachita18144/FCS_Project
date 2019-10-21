@@ -1,0 +1,15 @@
+{% extends "../registration/base.html" %}
+
+{% block content %}
+    <h2>Create Page Form</h2>
+    <hr>
+    <div class="container" style="border:3px solid lightsteelblue; height:400px;">
+    </div>
+    <br>
+        <div class="form-group">
+                <form action="#" method="POST">
+                  {% csrf_token %} 
+                <input type="submit" class="btn btn-outline-primary btn-block" value="Create Page">
+                </form>
+        </div>
+{% endblock %}

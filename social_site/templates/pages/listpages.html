@@ -1,0 +1,25 @@
+{% extends "../registration/base.html" %}
+
+{% block content %}
+    <h2>All Pages</h2>
+    <hr>
+    <div class="container-fluid">
+         <a href = "{% url 'createpage' %}" class="btn btn-outline-primary btn-block">Create a NEW Page</a>
+         <hr>
+    </div>
+
+
+    <div class="container-fluid">
+            {% for page in allpages %}
+                <div class="row">
+                    <div class="col-8">
+                        {{page.page_name}}
+                    </div>
+                    <div class="col-sm">
+                        <a href = "{% url 'pages' page.page_name %}" class="btn btn-outline-primary btn-block">View Page</a>
+                     </div>
+                </div>
+                 <hr>
+            {% endfor %}
+        </div>
+{% endblock %}

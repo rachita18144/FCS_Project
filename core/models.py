@@ -7,6 +7,9 @@ class Friends(models.Model):
     class Meta:
         unique_together = (("person_user_name", "friend_user_name"),)
 
+    def __str__(self):
+        return self.friend_user_name
+
 #class Groups(models.Model):
 #    created_by = models.CharField(max_length=30)
 #    group_name = models.CharField(max_length=30)
@@ -43,6 +46,19 @@ class DirectMessages(models.Model):
     msg_content=models.TextField()
     time=models.DateTimeField()
     status=models.BooleanField()
+
+    def __str__(self):
+        return self.msg_content
+
+class Pages(models.Model):
+    page_name= models.CharField(max_length=30, unique=True)
+    page_des=models.CharField(max_length=100)
+    page_admin=models.CharField(max_length=30)
+
+class PagePosts(models.Model):
+    page_name=models.CharField(max_length=30)
+    post_content=models.TextField()
+    postTime=models.DateTimeField()
 
     def __str__(self):
         return self.msg_content
