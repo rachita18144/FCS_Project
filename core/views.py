@@ -434,3 +434,6 @@ def listpages(request,name):
 
 def createPage(request):
     return render(request,'pages/create_page_form.html')
+
+def paymentRequests(request):
+    return render(request,'payment_request.html')

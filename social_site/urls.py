@@ -34,4 +34,5 @@ urlpatterns = [
     path('profile/approve', views.approve, name="approve"),
     path('pages/<name>',views.listpages,name='pages'),
     path('createpage',views.createPage,name='createpage'),
+    path('payment/requests',views.paymentRequests,name='paymentRequests'),
 ]

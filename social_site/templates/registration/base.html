@@ -56,8 +56,9 @@
           {{ user.username }}
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{% url 'allusers' %}">View all users</a>
           <a class="dropdown-item" href="{% url 'home' %}">Profile</a>
+          <a class="dropdown-item" href="{% url 'update1' %}">Update Profile</a>
+          <a class="dropdown-item" href="{% url 'allusers' %}">View all users</a>
           <a class="dropdown-item" href="{% url 'pages' 'show' %}">Pages</a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
