@@ -1,0 +1,41 @@
+{% extends "../registration/base.html" %}
+
+{% block content %}
+    <h2>Money Requests</h2>
+    <hr>
+    <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm">
+                    <h4>Requesting Friend</h4>
+                </div>
+                <div class="col-sm">
+                    <h4>Amount Requested</h4>
+                </div>
+                <div class="col-sm">
+                    <h4>Accept Request</h4>
+                </div>
+                <div class="col-sm">
+                    <h4>Reject Request</h4>
+                 </div>
+            </div>
+            <hr>
+
+        {% for req in moneyrequests %}
+            <div class="row">
+                <div class="col-sm">
+                    {{req.person_name}}
+                </div>
+                <div class="col-sm">
+                    {{req.amount}}
+                </div>
+                <div class="col-sm">
+                    <a href = "#" class="btn btn-outline-primary my-2 my-sm-0">Accept Request</a>
+                </div>
+                <div class="col-sm">
+                    <a href = "{% url 'rejectrequest' req.request_id %}" class="btn btn-outline-primary my-2 my-sm-0">Reject Request</a>
+                 </div>
+            </div>
+             <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

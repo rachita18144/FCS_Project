@@ -91,3 +91,9 @@ class PagePosts(models.Model):
 
     def __str__(self):
         return self.post_content
+
+class MoneyRequests(models.Model):
+    request_id=models.AutoField(primary_key=True)
+    friend_name=models.CharField(max_length=30)
+    person_name=models.CharField(max_length=30)
+    amount=models.IntegerField(default=0)

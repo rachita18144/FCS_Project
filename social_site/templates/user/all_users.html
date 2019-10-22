@@ -12,9 +12,12 @@
                 <div class="col-sm">
                     <a href = "{% url 'profilepage' user.username %}" class="btn btn-outline-primary my-2 my-sm-0">View Profile</a>
                 </div>
+
+                {% if user_type == "Commercial" %}
                 <div class="col-sm">
-                    <a href = "{% url 'dm' user.username %}" class="btn btn-outline-primary my-2 my-sm-0">Direct Message</a>
+                    <a href = "{% url 'dm' user.username %}" id="dmbutton" class="btn btn-outline-primary my-2 my-sm-0">Direct Message</a>
                  </div>
+                {% endif %}
             </div>
              <hr>
         {% endfor %}

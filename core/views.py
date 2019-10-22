@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from core.models import Groups, Friends, FriendTimelinePost, UserPosts, DirectMessages, GroupRequest, UserGroup, GroupNew, UpdateProfile, PagePosts, Pages
+from core.models import MoneyRequests
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
@@ -13,9 +14,9 @@ from django.db.models import Count
 
 user = None
 grp_name = None
+user_type = None
 
 #TODO: Add google authentication(using OTP), add a new page
-#TODO: Search group from group name
 
 def loginSignup(request):
     if request.method == 'POST':
@@ -67,6 +68,7 @@ def search(request):
 
 @login_required(login_url='/accounts/login/')
 def home(request):
+    global user_type 
     s=request.POST.__contains__('postcontent')
     if s:
         model=UserPosts()
@@ -94,6 +96,7 @@ def home(request):
         g.save()
     v = UpdateProfile.objects.get(user_id=user)
     type = v.user_type
+    user_type = v.user_type
     if type == "Casual":
         return render(request, 'user/home.html',{'allposts':allposts,'friend_count':friend_count,'group_count':group_count, 'alert_flag': True})
     else:
@@ -186,7 +189,7 @@ def groups(request):
 
 def allUsers(request):
     allusers=User.objects.all
-    return render(request, 'user/all_users.html', {'users':allusers})
+    return render(request, 'user/all_users.html', {'users':allusers, 'user_type':user_type})
 
 def update1(request):
     return render(request, 'updateprofile/update.html')
@@ -436,4 +439,9 @@ def createPage(request):
     return render(request,'pages/create_page_form.html')
 
 def paymentRequests(request):
-    return render(request,'payment_request.html')
+    requests = MoneyRequests.objects.filter(friend_name= request.user.username).values()
+    return render(request,'payment/payment_request.html',{'moneyrequests':requests})
+
+def rejectRequest(request, request_id):
+    MoneyRequests.objects.filter(request_id=request_id).delete()
+    return paymentRequests(request)

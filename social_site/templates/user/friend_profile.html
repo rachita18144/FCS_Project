@@ -23,7 +23,9 @@
                         {% endif %}
                     </div>
                     <div class="col-5">
-                        <a class="btn btn-primary" href="#" href="{% url 'dm' username %}" role="button">Direct Message</a>
+                        {% if isFriend == True %}
+                        <a class="btn btn-primary" href="{% url 'dm' username %}" role="button">Direct Message</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

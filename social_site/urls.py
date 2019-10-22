@@ -35,4 +35,5 @@ urlpatterns = [
     path('pages/<name>',views.listpages,name='pages'),
     path('createpage',views.createPage,name='createpage'),
     path('payment/requests',views.paymentRequests,name='paymentRequests'),
+    path('payment/reject_request/<request_id>',views.rejectRequest,name='rejectrequest'),
 ]
