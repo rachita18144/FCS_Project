@@ -33,8 +33,8 @@
     {% if l.5 %}
         <div>
             <form>
-                {% csrf_token %}
-            <button type="submit" class="button" id="join" name="gname" value="{{l.0}}" formaction="payment" formmethod="post" onclick="yesnoCheck()">Join</button>
+
+            <button type="submit" class="button" id="join" name="gname" value="{{l.0}}" formaction='profile/payment' formmethod="get" onclick="yesnoCheck()">Join</button>
             </form>
         </div>
         <script type="text/javascript">
@@ -46,8 +46,8 @@
     {% elif l.3 %}
         <div>
             <form>
-                {% csrf_token %}
-            <button type="submit" class="button" id="join1" name="gname" value="{{l.0}}" formaction="join1" formmethod="post" onclick="yesnoCheck()">Join</button>
+
+            <button type="submit" class="button" id="join1" name="gname" value="{{l.0}}" formaction='profile/join1' formmethod="get" onclick="yesnoCheck()">Join</button>
             </form>
         </div>
         <script type="text/javascript">
@@ -58,8 +58,8 @@
     {% else %}
         <div>
             <form>
-                {% csrf_token %}
-            <button type="submit" class="button" id="join4" name="gname" value="{{l.0}}" formaction="join" formmethod="post" onclick="yesnoCheck()">Join</button>
+
+            <button type="submit" class="button" id="join4" name="gname" value="{{l.0}}" formaction='profile/join' formmethod="get" onclick="yesnoCheck()">Join</button>
             </form>
         </div>
         <script type="text/javascript">

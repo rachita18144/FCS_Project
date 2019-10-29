@@ -23,9 +23,10 @@ class FriendTimelinePost(models.Model):
     post_content = models.TextField()
 
 class UserPosts(models.Model):
-    user_id = models.CharField(max_length=20)
+    postedBy = models.CharField(max_length=20)
     postContent = models.TextField()
     postTime = models.DateTimeField()
+    postedOn= models.CharField(max_length=20)
 
     def __str__(self):
         return self.postContent
@@ -97,3 +98,9 @@ class MoneyRequests(models.Model):
     friend_name=models.CharField(max_length=30)
     person_name=models.CharField(max_length=30)
     amount=models.IntegerField(default=0)
+
+class BalanceInfo(models.Model):
+    balance = models.IntegerField(default=0)
+    userid = models.CharField(max_length= 50  , default = 0)
+    def __str__(self):
+        return self.userid

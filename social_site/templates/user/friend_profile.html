@@ -34,21 +34,41 @@
 
         <div class="card">
             <div class="card-body">
-                <h3>Post on {{username}}'s timeline</h3>
+                <h3>Post on {{username}} timeline</h3>
 
-                <form method="post">
+                <form action="{% url 'profilepage' username %}" method="post">
                     {% csrf_token %}
                     <div class="form-row">
-                        <div class="col-10">
+                        <div class="col-7">
                             <input type="text" name="post_text" id="post_text" class="form-control" placeholder="Post">
                         </div>
                         <div class="col">
-                            <a class="btn btn-primary" id="post" href="#" role="button">Post</a>
+                            <input type="submit" class="btn btn-outline-primary btn-block" value="POST">
+                            <!-- <a class="btn btn-info" type="submit" id="post">Post</a> -->
                         </div>
                     </div>
                 </form>
             </div>
         </div>
+        
+        <hr class="wide">
+        <div class="container-fluid">
+            {%for user_post in allposts %}
+              <div class="card">
+                  <div class="card-header">
+                  <p>{{user_post.postTime}} </p> 
+                  <p>Posted By: {{user_post.postedBy}}</p>
+                  </div>
+                  <div class="card-body">
+                    <blockquote class="blockquote mb-0">
+                      <p>{{user_post.postContent}}
+                    </blockquote>
+                  </div>
+               </div>
+               <br>
+               {% endfor %}       
+          </div> 
+
     </div>
 </div>
 {% endblock %}

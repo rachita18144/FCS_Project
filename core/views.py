@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from core.models import Groups, Friends, FriendTimelinePost, UserPosts, DirectMessages, GroupRequest, UserGroup, GroupNew, UpdateProfile, PagePosts, Pages
+from core.models import Groups, Friends, FriendTimelinePost, UserPosts, DirectMessages, GroupRequest, UserGroup, GroupNew, UpdateProfile, PagePosts, Pages,BalanceInfo
 from core.models import MoneyRequests
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -77,11 +77,12 @@ def home(request):
         content=request.POST.get('postcontent')
         print(content)
         model.postContent=content
-        model.user_id= request.user.username
+        model.postedBy= request.user.username
         model.postTime=str
+        model.postedOn= request.user.username
         model.save()
 
-    allposts=UserPosts.objects.filter(user_id=request.user.username).order_by('-postTime')
+    allposts=UserPosts.objects.filter(postedOn=request.user.username).order_by('-postTime')
     friend_count=Friends.objects.filter(person_user_name=request.user.username).count()
     group_count=Groups.objects.filter(person_user_name=request.user.username).count()
 
@@ -95,12 +96,19 @@ def home(request):
         g.user_type = b
         g.save()
     v = UpdateProfile.objects.get(user_id=user)
+    try:
+       p1= BalanceInfo.objects.get(userid=user)
+    except BalanceInfo.DoesNotExist:
+        payment = BalanceInfo()
+        payment.balance = 0
+        payment.userid = user
+        payment.save()
     type = v.user_type
-    user_type = v.user_type
     if type == "Casual":
-        return render(request, 'user/home.html',{'allposts':allposts,'friend_count':friend_count,'group_count':group_count, 'alert_flag': True})
+        return render(request, 'user/home.html',{'allposts':allposts,'friend_count':friend_count,'group_count':group_count, 'a': True})
     else:
-        return render(request, 'user/home.html',{'allposts':allposts,'friend_count':friend_count,'group_count':group_count, 'alert_flag': False})
+        return render(request, 'user/home.html',{'allposts':allposts,'friend_count':friend_count,'group_count':group_count, 'a': False})
+
 
 #open friend profile and pass username of friend
 @login_required(login_url='/accounts/login/')
@@ -109,8 +117,8 @@ def personProfile(request, username):
         isFriend = checkIfAlreadyFriend(username, request.user.username)
         return render(request, 'user/friend_profile.html', {'username':username, 'isFriend':isFriend} )
     if grp_name:
+        # return view(request, username)
         return view(request, username)
-        #return render(request, 'user/group_page.html', {'group_name':username} )
 
 @login_required(login_url='/accounts/login/')
 def addFriend(request):
@@ -171,17 +179,33 @@ def directmessage(request,name):
         model.time=str
         model.status=False
         model.save()
-    allmsgs=(DirectMessages.objects.filter(sender=name)|DirectMessages.objects.filter(receiver=name)).order_by('time')
+    allmsgs=(DirectMessages.objects.filter(sender=name)|DirectMessages.objects.filter(receiver=name).filter(sender=request.user.username)).order_by('time')
     print(allmsgs.count())
     return render(request,'user/directmessage.html',{'allmsgs':allmsgs,'friendname':name})
 
 def friends(request):
-    allfriends=Friends.objects.filter(person_user_name=request.user.username).order_by('friend_user_name')
+    allfriends=Friends.objects.filter(person_user_name=request.user.username).order_by('friend_user_name')   
     return render(request, 'user/listfriends.html',{'allfriends':allfriends})
 
 def viewprofile(request,name):
     isFriend = checkIfAlreadyFriend(name, request.user.username)
-    return render(request, 'user/friend_profile.html', {'username':name, 'isFriend':isFriend} )
+    s=request.POST.__contains__('post_text')
+    if s:
+
+        model=UserPosts()
+        now = datetime.now()
+        str=now.strftime("%Y-%m-%d %H:%M:%S")
+        content=request.POST.get('post_text')
+        print(content)
+        model.postContent=content
+        model.postedBy= request.user.username
+        model.postedOn= name
+        model.postTime=str
+        model.save()
+
+    allposts=UserPosts.objects.filter(postedOn=name).order_by('-postTime')
+    print(allposts.count())
+    return render(request, 'user/friend_profile.html', {'username':name, 'isFriend':isFriend,'allposts':allposts} )
 
 def groups(request):
     allgroups=Groups.objects.filter(person_user_name=request.user.username).order_by('group_name')
@@ -206,6 +230,10 @@ def update(request):
             post = UpdateProfile()
             user = request.user.id
             u = UpdateProfile.objects.get(user_id = user)
+            ph= request.POST.get('phno')
+            length= len(ph)
+            if length!=10:
+                return render(request,'updateprofile/update.html',{'a':True})
             if u:
                 u.user_id = user
                 u.First_name = request.POST.get('fname')
@@ -234,6 +262,18 @@ def create(request):
             user = request.user.id
             g = request.POST.get('groupname')
             t=1
+            close="close"
+            c= GroupNew.objects.filter(admin_id= user, privacy=close).count()
+            privacy= request.POST.get('privacy')
+            obj= UpdateProfile.objects.get(user_id= user)
+            type= obj.user_type
+            if type== 'PremiumSilver' and privacy== 'close':
+                if c==2:
+                    return render(request, 'group/creategroup.html', {'limit':True})
+            elif type== 'PremiumGold'  and privacy== 'close':
+                if c==4:
+                    return render(request, 'group/creategroup.html', {'limit2': True})
+
 
             if GroupNew.objects.filter( group_name = g).exists():
                 return render(request, 'group/creategroup.html', {'alert_flag': True})
@@ -257,36 +297,40 @@ def create(request):
            # messages.info(request, 'Please fill all the fields')
             return render(request, 'group/creategroup.html', {'alert_flag2': True})
 
-
 def view(request, group):
-    group_name=group
+    group_name=str(group).strip()
     user = request.user.id
-    glist= GroupNew.objects.filter(group_name= group_name)
-    gid1 = glist.values("group_id")
-    gid = gid1[0]
+    print(group_name)
+    glist= GroupNew.objects.get(group_name= group_name)
+    e= GroupNew.objects.filter(group_name= group_name).exists()
+    print(e)
+    print(glist.group_id)
+   # gid1 = glist.values("group_id")
+  #  gid = gid1[0]
     v=0
     p=0
     g_id1=0
-    id = list(gid)[0]
-    status = GroupRequest.objects.filter(group_id = gid.get(id), user_id= user)
-    ex= GroupRequest.objects.filter(group_id = gid.get(id), user_id= user).exists()
+   # id = list(gid)[0]
+    #gid.get(id)
+    status = GroupRequest.objects.filter(group_id = glist.group_id, user_id= user)
+    ex= GroupRequest.objects.filter(group_id = glist.group_id, user_id= user).exists()
     bool1 = 3
-    privacy= glist.values("privacy")
-    privacy1= privacy[0]
-    p_id= list(privacy1)[0]
-    pid= privacy1.get(p_id)
-    group_t= glist.values("group_type")
-    gt1=group_t[0]
-    gt= list(gt1)[0]
-    g_id= gt1.get(gt)
-    if g_id == "premium":
+    privacy= glist.privacy
+   # privacy1= privacy[0]
+   # p_id= list(privacy1)[0]
+   # pid= privacy1.get(p_id)
+    group_t= glist.group_type
+  #  gt1=group_t[0]
+  #  gt= list(gt1)[0]
+  #  g_id= gt1.get(gt)
+    if group_t == "premium":
         g_id1=1
-    userg_exist= UserGroup.objects.filter(user_id= user, group_id= gid.get(id)).exists()
+    userg_exist= UserGroup.objects.filter(user_id= user, group_id=glist.group_id).exists()
     if userg_exist:
         joined= True
     else:
         joined= False
-    if pid=='open':
+    if privacy=='open':
         p= 1
     else:
         p= 0
@@ -303,13 +347,13 @@ def view(request, group):
     else:
         bool= False
   #  count = UserGroup.objects.filter(group_id= gid.get(id)).count()
-    t = UserGroup.objects.filter(user_id= user, group_id= gid.get(id)).exists()
+    t = UserGroup.objects.filter(user_id= user, group_id= glist.group_id).exists()
     l=[group_name,bool, v, p, joined, g_id1]
     return render( request,'group/viewgroup.html', {'l': l})
 
 def join(request):
     userreq= GroupRequest()
-    gname= request.POST.get("gname"," ")
+    gname= request.GET.get("gname"," ")
     glist = GroupNew.objects.filter(group_name=gname)
     gid1 = glist.values("group_id")
     aid1= glist.values("admin_id")
@@ -327,7 +371,7 @@ def join(request):
     return render(request, 'user/home.html', {'alert_flag1': True})
 
 def join1(request):
-    gname = request.POST.get("gname", " ")
+    gname = request.GET.get("gname", " ")
     glist = GroupNew.objects.filter(group_name=gname)
     gid1 = glist.values("group_id")
     gid = gid1[0]
@@ -345,8 +389,21 @@ def post(request):
     print(name)
     return render(request, 'group/viewgroup.html', {'l':name})
 
+
 def payment(request):
-    return render(request, 'group/payment.html')
+    gname = request.GET.get("gname", "")
+    i = 0;
+    length = len(gname)
+    group_name = ""
+
+    while i != length:
+        group_name += gname[i]
+        i = i + 1
+    print("hiiiiiii",group_name)
+    glist = GroupNew.objects.get(group_name=str(group_name).strip())
+   # g_privacy = glist.privacy
+    amount = glist.amount
+    return render(request, 'group/payment.html',{'gname':group_name, 'amount':amount})
 def viewrequest1(request):
     user= request.user.id
     glist= GroupNew.objects.filter(admin_id= user)
@@ -391,27 +448,6 @@ def viewcontent(request):
         k3.append(gname)
     z= zip(k,k1,k3)
     return render(request, 'group/viewrequest.html',{'k':z})
-def approve(request):
-    gname= request.POST.get("gname", [])
-    length=len(gname)
-    k=[]
-    str1=""
-    for i in range(length-1):
-        str1 += gname[i]
-    uid= gname[length-1]
-    glist = GroupNew.objects.filter(group_name=str1)
-    gid1 = glist.values("group_id")
-    gid = gid1[0]
-    id = list(gid)[0]
-    group_id = gid.get(id)
-    req= GroupRequest.objects.get(user_id= str(uid), group_id= group_id)
-    req.request=1
-    req.save()
-    usergroup= UserGroup()
-    usergroup.group_id= group_id
-    usergroup.user_id= uid
-    usergroup.save()
-    return render(request, 'group/viewrequest.html',{'t_flag':True})
 
 def listpages(request,name):
     if name=="show":
@@ -436,7 +472,24 @@ def listpages(request,name):
         return render(request,'pages/pagelayout.html',{'page':page,'pagename':name,'allposts':allposts})
 
 def createPage(request):
-    return render(request,'pages/create_page_form.html')
+    if request.method == "POST":
+        pagename=request.POST.get('pagename')
+        pagebio=request.POST.get('pagebio')
+        print(pagename)
+        print(pagebio)
+        if pagename == '':
+            messages.info(request,'Enter Page name')
+            return redirect('createpage')
+        else:
+            model=Pages()
+            model.page_name=pagename
+            model.page_des=pagebio
+            model.page_admin=request.user.username
+            model.save()
+            messages.info(request, 'Page Created!')
+            return redirect('createpage')
+    else:
+        return render(request,'pages/create_page_form.html')
 
 def paymentRequests(request):
     requests = MoneyRequests.objects.filter(friend_name= request.user.username).values()
@@ -445,3 +498,103 @@ def paymentRequests(request):
 def rejectRequest(request, request_id):
     MoneyRequests.objects.filter(request_id=request_id).delete()
     return paymentRequests(request)
+
+def requestmoney(request,name):
+    if name=="showlist":
+        allfriends=Friends.objects.filter(person_user_name=request.user.username).order_by('friend_user_name')
+        return render(request,'payment/show_friends.html',{'allfriends':allfriends})
+    elif name=="requests":
+        print("-----------")
+        requests = MoneyRequests.objects.filter(friend_name= request.user.username).values()
+        return render(request,'payment/payment_request.html',{'moneyrequests':requests})
+    else:
+        if request.method=="POST":
+            amount_=request.POST.get('amount')
+            if amount_=='':
+                messages.info(request, 'Enter the amount!')
+            else:
+                model=MoneyRequests()
+                model.friend_name=name
+                model.amount=request.POST.get('amount')
+                model.person_name=request.user.username
+                model.save()
+                messages.info(request, 'Request sent!')
+        allfriends=Friends.objects.filter(person_user_name=request.user.username).order_by('friend_user_name')
+        return render(request,'payment/show_friends.html',{'allfriends':allfriends})
+
+def approve(request):
+    gname= request.POST.get("gname", [])
+    length=len(gname)
+    k=[]
+    str1=""
+    i=0
+    while gname[i]!=',':
+        str1 += gname[i]
+        i=i+1
+    uid=""
+    i=i+1
+    while i!=length:
+        uid+=gname[i]
+        i=i+1
+    print(str1)
+    print(uid)
+    glist = GroupNew.objects.get(group_name=str1)
+   # gid1 = glist.values("group_id")
+   # gid = gid1[0]
+   # id = list(gid)[0]
+    group_id = glist.group_id
+    req= GroupRequest.objects.get(user_id= str(uid), group_id= group_id)
+    req.request=1
+    req.save()
+    usergroup= UserGroup()
+    usergroup.group_id= group_id
+    usergroup.user_id= uid
+    usergroup.save()
+    return render(request, 'group/viewrequest.html',{'t_flag':True})
+
+def payment1(request):
+    gname= request.POST.get("gname","")
+    i=0;
+    length=len(gname)
+    group_name=""
+
+    while i!=length:
+        group_name+=gname[i]
+        i=i+1
+    print(group_name)
+    glist= GroupNew.objects.get(group_name= group_name)
+    g_privacy= glist.privacy
+    amount= glist.amount
+    g_id= glist.group_id
+    admin= glist.admin_id
+    b = BalanceInfo.objects.get(userid=request.user.id)
+    p = b.balance
+    d = 0
+   # num= Transaction.objects.get(userid= request.user.id)
+  #  if num==15:
+  #      return render(request,'user/home.html',{'num':True})
+    if p != 0 and p>=amount:
+        p1 = p - amount
+        b.balance = p1
+        b.save()
+    else:
+        d = 1
+    if d==1:
+        return render(request, 'user/home.html', {'d':d})
+    if g_privacy=='open':
+        u=UserGroup()
+        u.group_id= g_id
+        u.user_id= request.user.id
+        u.save()
+    else:
+        u= GroupRequest()
+        u.request=0
+        u.user_id= request.user.id
+        u.group_id= g_id
+        u.admin_id= admin
+        u.save()
+
+    if g_privacy=='open':
+        return render(request, 'user/home.html',{'join':True})
+    else:
+        return render(request, 'user/home.html', {'alert_flag1': True})

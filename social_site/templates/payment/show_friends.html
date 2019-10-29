@@ -1,0 +1,29 @@
+{% extends "../registration/base.html" %}
+
+{% block content %}
+    <h2>Friends Available For Money Requests</h2>
+    <hr>
+    {% if messages %}
+    {% for message in messages %}
+     {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+    {% endfor %}
+    {% endif %}
+    <div class="container-fluid">
+        {% for friend in allfriends %}
+            <div class="row">
+                <div class="col-sm">
+                    {{friend.friend_user_name}}
+                </div>
+                <div class="col-sm">
+                    <form action="{% url 'payment' friend.friend_user_name %}" method="POST">
+                        {% csrf_token %} 
+                      <input type="text" class="form-control" placeholder="Enter Amount" name="amount">
+                      <br>
+                      <input type="submit" class="btn btn-outline-primary btn-block" value="REQUEST">
+                      </form>
+                </div>
+            </div>
+             <hr>
+        {% endfor %}
+    </div>
+{% endblock %}

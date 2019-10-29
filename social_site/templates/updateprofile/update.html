@@ -7,6 +7,9 @@
 <div class="h1">
 <h1 style="color:green;"> Update Profile </h1>
 </div>
+{% if a %}
+<script>alert("Length of phone number should be 10")</script>
+{% endif %}
 <div class="b">
 <form action="update" method="post">
     {% csrf_token %}

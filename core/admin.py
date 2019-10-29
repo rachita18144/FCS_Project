@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import Friends, Groups, FriendTimelinePost, GroupNew, GroupRequest, UpdateProfile, UserGroup, Pages, PagePosts
+from core.models import Friends, Groups, FriendTimelinePost, GroupNew, GroupRequest, UpdateProfile, UserGroup, Pages, PagePosts, BalanceInfo
 from core.models import MoneyRequests, DirectMessages, UserPosts
 
 admin.site.register(Friends)
@@ -14,3 +14,4 @@ admin.site.register(PagePosts)
 admin.site.register(MoneyRequests)
 admin.site.register(DirectMessages)
 admin.site.register(UserPosts)
+admin.site.register(BalanceInfo)

@@ -3,13 +3,43 @@
 {% block content %}
     <h2>Create Page Form</h2>
     <hr>
-    <div class="container" style="border:3px solid lightsteelblue; height:400px;">
+    {% if messages %}
+    {% for message in messages %}
+     {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
+    {% endfor %}
+
+    {% endif %}
+    <form action="{% url 'createpage' %}" method="post">
+    <div class="container" style="border:3px solid lightsteelblue">  
+
+                {% csrf_token %}
+                {{form}}
+                {% if alert_flag %}
+                <script>alert("Please choose different group name. Group already exist")</script>
+                {% endif %}
+                {% if alert_flag1 %}
+                <script>alert("Group created")</script>
+                {% endif %}
+                {% if alert_flag2 %}
+                <script>alert("Please fill all the fields")</script>
+                {% endif %}
+                <br>
+                <div>
+                    <label for="page_name"><b>Page Name</b></label>
+                <input type="text" class="form-control" id="page_name" name="pagename">
+                </div>
+                <br>
+                    <div>
+                    <label for="bio"><b>Page Bio</b></label>
+                <input type="text" class="form-control" id="pagebio" name="pagebio">
+                    </div>
+                    <br>           
     </div>
     <br>
-        <div class="form-group">
-                <form action="#" method="POST">
-                  {% csrf_token %} 
-                <input type="submit" class="btn btn-outline-primary btn-block" value="Create Page">
-                </form>
-        </div>
+    <div class="container">
+        <input type="submit" class="btn btn-outline-primary btn-block" value="Create Page">
+    </div>
+  
+   </form>
+
 {% endblock %}

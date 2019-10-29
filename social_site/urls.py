@@ -28,12 +28,16 @@ urlpatterns = [
     path('profile/join', views.join, name="join"),
     path('profile/join1', views.join1, name="join1"),
     path('profile/post', views.post, name="post"),
-    path('profile/payment', views.payment, name="payment"),
+     path('profilePage/profile/payment', views.payment, name="payment"),
     path('profile/viewrequest1', views.viewrequest1, name="viewrequest1"),
     path('profile/viewcontent', views.viewcontent, name="viewcontent"),
     path('profile/approve', views.approve, name="approve"),
     path('pages/<name>',views.listpages,name='pages'),
     path('createpage',views.createPage,name='createpage'),
+    path('payment/<name>',views.requestmoney,name='payment'),
+    # path('payment/requests',views.paymentRequests,name='paymentRequests'),
+    path('reject_request/<request_id>',views.rejectRequest,name='rejectrequest'),
     path('payment/requests',views.paymentRequests,name='paymentRequests'),
-    path('payment/reject_request/<request_id>',views.rejectRequest,name='rejectrequest'),
+    path('profilePage/profile/payment1',views.payment1, name="payment1"),
+
 ]

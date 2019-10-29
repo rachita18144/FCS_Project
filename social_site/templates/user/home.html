@@ -1,7 +1,32 @@
 {% extends "../registration/base.html" %}
 
+{% load staticfiles %}
+
 {% block content %}
+<link rel="stylesheet" href="{%static 'update1.css' %}">
+<div class="row">
+    <div class="column">
+
     <h2>Hi {{ user.username }}</h2>
+    </div>
+
+    <div class="column">
+        <div class="right">
+ <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown1" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Group
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="{% url 'createg' %}">Create Group</a>
+          <a class="dropdown-item" href="{% url 'viewrequest' %}">View Pending Request</a>
+        </div>
+      </li>
+    </ul>
+        </div>
+    </div>
+</div>
+
 <hr>
 <div class=".container-fluid">
         <div style="clear: both">
@@ -36,11 +61,12 @@
           {%for user_post in allposts %}
             <div class="card">
                 <div class="card-header">
-                 {{user_post.postTime}}
+                        <p>{{user_post.postTime}} </p> 
+                        <p>Posted By: {{user_post.postedBy}}</p>
                 </div>
                 <div class="card-body">
                   <blockquote class="blockquote mb-0">
-                    <p>{{user_post.postContent}}
+                      {{user_post.postContent}} 
                   </blockquote>
                 </div>
              </div>
@@ -62,5 +88,21 @@
     {% if join %}
         <script> alert("Group Joined") </script>
 {% endif %}
-
+{% if a %}
+                        <script type="text/javascript">
+                                document.getElementById("navbarDropdown1").style.display = "none";
+                         </script>
+    {% endif %}
+    {% if alert_flag1 %}
+        <script> alert("Request Sent") </script>
+    {% endif %}
+    {% if join %}
+        <script> alert("Group Joined") </script>
+{% endif %}
+{% if d %}
+<script>alert("Insufficient Balance. Please add money to your wallet")</script>
+{% endif %}
+{% if num %}
+<script>alert("You are not allowed to do more than 15 transactions. Please upgrade to Premium")</script>
+{% endif %}
 {% endblock %}
